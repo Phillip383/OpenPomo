@@ -8,16 +8,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 qt_standard_project_setup()
 
-set(UI_DIR ui/**)
-set(SOURCE_DIR source/**)
-include_directories(headers/**)
+include_directories(headers)
+
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "source/*.cpp")
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS "headers/*.h")
+file(GLOB_RECURSE UIS CONFIGURE_DEPENDS "ui/*.ui")
+
+list(APPEND CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/ui")
 
 qt_add_executable(OpenPomo
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+    ${SOURCES}
+    ${HEADERS}
+    ${UIS}
 )
+
 target_link_libraries(OpenPomo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(OpenPomo PROPERTIES
